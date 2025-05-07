@@ -1,0 +1,30 @@
+<?php
+
+namespace Modules\commission\app\Models;
+
+use Carbon\Carbon;
+use Modules\core\app\Http\Models\BaseModel;
+use Modules\core\app\Traits\ModelsTrait\GeneralCrudTrait;
+
+/**
+ * @property int id
+ * @property float from_amount
+ * @property float to_amount
+ * @property float percentage
+ * @property integer minimum_fee
+ * @property integer maximum_fee
+ * @property Carbon created_at
+ * @property Carbon updated_at
+ */
+class CommissionRule extends BaseModel
+{
+    use GeneralCrudTrait;
+
+    protected $fillable = [
+        "from_amount",
+        "to_amount",
+        "percentage",
+        "minimum_fee",
+        "maximum_fee",
+    ];
+}
