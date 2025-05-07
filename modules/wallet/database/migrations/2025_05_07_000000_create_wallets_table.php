@@ -9,10 +9,9 @@ return new class extends Migration {
     {
         Schema::create('wallets', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()
-                ->onDelete('cascade');
-            $table->decimal('gold_balance', 16, 3)->default(0); // گرم
-            $table->unsignedBigInteger('rial_balance')->default(0); // ریال
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->decimal('gold_balance', 16, 3)->default(0);
+            $table->unsignedBigInteger('amount_balance')->default(0);
             $table->timestamps();
         });
     }

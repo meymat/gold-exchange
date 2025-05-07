@@ -10,20 +10,20 @@ return new class extends Migration {
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()
-                ->onDelete('cascade');
-            $table->enum('type', ['buy', 'sell']);
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->enum('trade_type', ['buy', 'sell']);
             $table->unsignedBigInteger('price');
             $table->decimal('initial_quantity', 12, 3);
             $table->decimal('remaining_quantity', 12, 3);
-            $table->foreignId('status_id')
-                ->constrained('b_order_statuses')
-                ->onUpdate('cascade');
+            $table->enum('order_status', ['open', 'partially_filled','filled','cancelled']);
             $table->timestamp('executed_at')->nullable();
             $table->timestamp('cancelled_at')->nullable();
             $table->timestamps();
         });
     }
+
+
+
 
     public function down(): void
     {

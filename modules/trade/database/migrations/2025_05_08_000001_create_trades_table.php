@@ -9,12 +9,8 @@ return new class extends Migration {
     {
         Schema::create('trades', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('buy_order_id')
-                ->constrained('orders')
-                ->onDelete('cascade');
-            $table->foreignId('sell_order_id')
-                ->constrained('orders')
-                ->onDelete('cascade');
+            $table->foreignId('buy_order_id')->constrained('orders')->onDelete('cascade');
+            $table->foreignId('sell_order_id')->constrained('orders')->onDelete('cascade');
             $table->unsignedBigInteger('price');
             $table->decimal('quantity', 12, 3);
             $table->unsignedBigInteger('commission_buyer');
