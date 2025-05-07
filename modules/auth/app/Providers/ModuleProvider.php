@@ -10,6 +10,10 @@ class ModuleProvider extends ServiceProvider
     public function register() : void
     {
         $this->loadMigrationsFrom(base_path('modules/'.$this->module_name.'/database/migrations'));
+        $this->mergeConfigFrom(
+            __DIR__ . '/../../config/sanctum.php',
+            'sanctum'
+        );
     }
 
     public function boot() : void
