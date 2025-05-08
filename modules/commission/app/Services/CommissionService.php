@@ -24,4 +24,9 @@ class CommissionService
             min($fee, $rule->maximum_fee)
         );
     }
+
+    public function calculate(string $type, float $quantity, float $price): float
+    {
+        return $this->estimate($quantity, $price);
+    }
 }

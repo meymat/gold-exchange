@@ -5,6 +5,7 @@ namespace Modules\order\app\Services;
 use Illuminate\Support\Facades\Auth;
 use Modules\commission\app\Services\CommissionService;
 use Modules\order\app\Interfaces\OrderRepositoryInterface;
+use Modules\order\app\Jobs\MatchOrderJob;
 use Modules\order\app\Models\Order;
 use Modules\order\app\Services\Validations\BasicValidationService;
 use Modules\order\app\Services\Validations\RiskLimitsValidationService;
@@ -50,7 +51,7 @@ class OrderService
         $fee    = $this->commissionService->estimate($data['quantity'], $data['price']);
         $this->walletValidationService->ensureSufficientFunds($wallet, $data['price'], $data['quantity'], $fee);
 
-        return $this->orderRepository->create([
+        $order = $this->orderRepository->create([
             'user_id'           => $data['user_id'],
             'type'              => TradeTypes::Sell->value,
             'price'             => $data['price'],
@@ -59,6 +60,10 @@ class OrderService
             'status_id'         => config('order.statuses.open'),
             'expires_at'        => $data['expires_at'],
         ]);
+
+        MatchOrderJob::dispatch($order->id);
+
+        return $order;
     }
 
     public function createSellOrder(array $data): Order
@@ -71,7 +76,7 @@ class OrderService
         $wallet = $this->walletRepository->forUser($userId);
         $this->walletValidationService->ensureSufficientGold($wallet, $data['quantity']);
 
-        return $this->orderRepository->create([
+        $order = $this->orderRepository->create([
             'user_id'           => $data['user_id'],
             'type'              => TradeTypes::Sell->value,
             'price'             => $data['price'],
@@ -80,5 +85,9 @@ class OrderService
             'status_id'         => config('order.statuses.open'),
             'expires_at'        => $data['expires_at'],
         ]);
+
+        MatchOrderJob::dispatch($order->id);
+
+        return $order;
     }
 }
