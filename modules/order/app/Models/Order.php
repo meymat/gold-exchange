@@ -17,7 +17,7 @@ use Modules\user\app\Models\User;
  * @property integer price
  * @property float initial_quantity
  * @property float remaining_quantity
- * @property string order_status_id
+ * @property string order_status
  * @property Carbon executed_at
  * @property Carbon cancelled_at
  * @property Carbon created_at
@@ -33,7 +33,7 @@ class Order extends BaseModel
         "price",
         "initial_quantity",
         "remaining_quantity",
-        "order_status_id",
+        "order_status",
         "executed_at",
         "cancelled_at",
     ];

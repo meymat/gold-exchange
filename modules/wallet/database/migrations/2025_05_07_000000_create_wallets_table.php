@@ -12,6 +12,8 @@ return new class extends Migration {
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->decimal('gold_balance', 16, 3)->default(0);
             $table->unsignedBigInteger('amount_balance')->default(0);
+            $table->unsignedBigInteger('reserved_amount')->default(0);
+            $table->decimal('reserved_gold', 16, 3)->default(0);
             $table->timestamps();
         });
     }
