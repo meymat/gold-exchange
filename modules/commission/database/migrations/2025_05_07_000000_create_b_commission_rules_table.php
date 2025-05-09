@@ -10,7 +10,7 @@ return new class extends Migration {
         Schema::create('commission_rules', function (Blueprint $table) {
             $table->id();
             $table->decimal('from_amount', 12, 3);
-            $table->decimal('to_amount',   12, 3);
+            $table->decimal('to_amount',   12, 3)->nullable();
             $table->decimal('percentage',  5, 2);
             $table->unsignedBigInteger('minimum_fee');
             $table->unsignedBigInteger('maximum_fee');
