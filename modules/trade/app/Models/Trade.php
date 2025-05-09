@@ -5,7 +5,7 @@ namespace Modules\trade\app\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Modules\core\app\Http\Models\BaseModel;
+use Modules\core\app\Models\BaseModel;
 use Modules\order\app\Models\Order;
 
 /**

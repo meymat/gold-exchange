@@ -3,8 +3,7 @@
 namespace Modules\commission\app\Models;
 
 use Carbon\Carbon;
-use Modules\core\app\Http\Models\BaseModel;
-use Modules\core\app\Traits\ModelsTrait\GeneralCrudTrait;
+use Modules\core\app\Models\BaseModel;
 
 /**
  * @property int id
