@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\core\app\Http\Models;
+namespace Modules\core\app\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Modules\core\app\Traits\ModelsTrait\GeneralCrudTrait;
