@@ -8,6 +8,6 @@ return [
     ],
     'tick_size' => 1000,
     'risk' => [
-        'position_limit' => 100000,
+        'position_limit' => 10000000000000,
     ],
 ];
