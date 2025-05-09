@@ -2,7 +2,6 @@
 
 namespace Modules\order\app\Services;
 
-use Illuminate\Support\Facades\Auth;
 use Modules\commission\app\Services\CommissionService;
 use Modules\order\app\Interfaces\OrderRepositoryInterface;
 use Modules\order\app\Jobs\MatchOrderJob;
@@ -44,7 +43,7 @@ class OrderService
     {
         $quantity   = $data['quantity'];
         $price   = $data['price'];
-        $userId = Auth::user()->id;
+        $userId = $data['user_id'];
         $this->basicValidationService->validateBasic($quantity, $price);
         $this->riskLimitsValidationService->validateRiskLimits($userId, $quantity, TradeTypes::Buy->value);
         $wallet = $this->walletRepository->forUser($userId);
@@ -70,7 +69,7 @@ class OrderService
     {
         $quantity   = $data['quantity'];
         $price   = $data['price'];
-        $userId = Auth::user()->id;
+        $userId = $data['user_id'];
         $this->basicValidationService->validateBasic($quantity, $price);
         $this->riskLimitsValidationService->validateRiskLimits($userId, $quantity, TradeTypes::Sell->value);
         $wallet = $this->walletRepository->forUser($userId);
