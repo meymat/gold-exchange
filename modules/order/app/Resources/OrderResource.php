@@ -10,13 +10,11 @@ class OrderResource extends JsonResource
     {
         return [
             'id'                 => $this->id,
-            'symbol'             => $this->symbol,
-            'type'               => $this->type,
+            'trade_type'         => $this->trade_type,
             'price'              => $this->price,
             'initial_quantity'   => $this->initial_quantity,
             'remaining_quantity' => $this->remaining_quantity,
-            'status'             => $this->status->name,
-            'expires_at'         => $this->expires_at,
+            'status'             => $this->order_status,
             'created_at'         => $this->created_at,
         ];
     }

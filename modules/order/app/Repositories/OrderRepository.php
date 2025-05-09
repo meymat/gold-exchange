@@ -42,7 +42,7 @@ class OrderRepository implements OrderRepositoryInterface
     {
         return (float)Order::query()
             ->where('user_id', $userId)
-            ->where('type', $type)
+            ->where('trade_type', $type)
             ->whereIn('order_status', [
                 OrderStatuses::Open->value,
                 OrderStatuses::PartiallyFilled->value,
@@ -57,7 +57,7 @@ class OrderRepository implements OrderRepositoryInterface
 
         return Order::query()
             ->where('user_id', $userId)
-            ->where('type', $opposite)
+            ->where('trade_type', $opposite)
             ->whereIn('order_status', [
                 OrderStatuses::Open->value,
                 OrderStatuses::PartiallyFilled->value,
@@ -71,7 +71,7 @@ class OrderRepository implements OrderRepositoryInterface
             : TradeTypes::Buy->value;
 
         return Order::query()
-            ->where('type', $opposite)
+            ->where('trade_type', $opposite)
             ->where('price', $opposite === TradeTypes::Sell->value ? '<=' : '>=', $price)
             ->whereIn('order_status', [OrderStatuses::Open->value, OrderStatuses::PartiallyFilled->value])
             ->orderBy('price', $opposite === TradeTypes::Sell->value ? 'desc' : 'asc')
@@ -88,7 +88,7 @@ class OrderRepository implements OrderRepositoryInterface
 
         Order::query()->where('id', $orderId)
             ->update([
-                'status_id' => $status,
+                'order_status' => $status,
             ]);
     }
 
@@ -96,7 +96,7 @@ class OrderRepository implements OrderRepositoryInterface
     {
         return Order::query()
             ->where('user_id', $userId)
-            ->whereIn('status_id', [
+            ->whereIn('order_status', [
                 OrderStatuses::Filled->value,
                 OrderStatuses::Cancelled->value,
             ])
@@ -109,7 +109,7 @@ class OrderRepository implements OrderRepositoryInterface
         $order = Order::query()
             ->where('id', $orderId)
             ->where('user_id', $userId)
-            ->whereIn('status_id', [
+            ->whereIn('order_status', [
                 OrderStatuses::Open->value,
                 OrderStatuses::PartiallyFilled->value,
             ])
@@ -120,7 +120,7 @@ class OrderRepository implements OrderRepositoryInterface
         $estimatedFee   = 0;
 
         $order->update([
-            'status_id'         => OrderStatuses::Cancelled->value,
+            'order_status'         => OrderStatuses::Cancelled->value,
             'remaining_quantity'=> 0,
         ]);
 
