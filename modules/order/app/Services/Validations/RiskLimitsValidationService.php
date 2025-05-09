@@ -15,7 +15,7 @@ class RiskLimitsValidationService
         OrderRepositoryInterface  $orderRepository
     ) {
         $this->orderRepository = $orderRepository;
-        $this->positionLimit = config('risk.position_limit');
+        $this->positionLimit = config('order.risk.position_limit');
     }
     public function validateRiskLimits(int $userId, float $quantity, string $type): void
     {
@@ -42,7 +42,7 @@ class RiskLimitsValidationService
     public function checkSelfTrade(int $userId, string $type): void
     {
         if ($this->orderRepository->hasSelfTrade($userId, $type)) {
-            throw ValidationException::withMessages(['type' => __('order.errors.self_trade')]);
+            throw ValidationException::withMessages(['trade_type' => __('order.errors.self_trade')]);
         }
     }
 }
