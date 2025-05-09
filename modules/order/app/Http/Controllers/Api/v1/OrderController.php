@@ -1,10 +1,11 @@
 <?php
 
-namespace Modules\order\app\Http\v1;
+namespace Modules\order\app\Http\Controllers\Api\v1;
 
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Modules\core\app\Http\Controllers\ModelController;
 use Modules\core\app\Http\Requests\StoreOrderRequest;
 use Modules\order\app\Models\Order;
@@ -24,19 +25,25 @@ class OrderController extends ModelController
 
     public function buy(StoreOrderRequest $request): JsonResponse
     {
+        DB::beginTransaction();
         $order = $this->orderService->createBuyOrder(array_merge(
             $request->validated(),
             ['user_id' => auth()->id()]
         ));
+        DB::commit();
+
         return response()->json(new OrderResource($order), 201);
     }
 
     public function sell(StoreOrderRequest $request): JsonResponse
     {
+        DB::beginTransaction();
         $order = $this->orderService->createSellOrder(array_merge(
             $request->validated(),
             ['user_id' => auth()->id()]
         ));
+        DB::commit();
+
         return response()->json(new OrderResource($order), 201);
     }
 
