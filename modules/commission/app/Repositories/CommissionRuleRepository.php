@@ -12,7 +12,10 @@ class CommissionRuleRepository implements CommissionRuleRepositoryInterface
     {
         $rule = CommissionRule::query()
             ->where('from_amount', '<=', $quantity)
-            ->where('to_amount',   '>=', $quantity)
+            ->where(function($q) use ($quantity) {
+                $q->where('to_amount', '>=', $quantity)
+                    ->orWhereNull('to_amount');
+            })
             ->first();
 
         if (! $rule) {
