@@ -18,8 +18,6 @@ use Modules\core\app\Traits\ModelsTrait\GeneralCrudTrait;
  */
 class CommissionRule extends BaseModel
 {
-    use GeneralCrudTrait;
-
     protected $fillable = [
         "from_amount",
         "to_amount",

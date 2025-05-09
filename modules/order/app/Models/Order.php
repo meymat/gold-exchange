@@ -6,7 +6,6 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Modules\core\app\Http\Models\BaseModel;
-use Modules\core\app\Traits\ModelsTrait\GeneralCrudTrait;
 use Modules\trade\app\Models\Trade;
 use Modules\user\app\Models\User;
 
@@ -25,8 +24,6 @@ use Modules\user\app\Models\User;
  */
 class Order extends BaseModel
 {
-    use GeneralCrudTrait;
-
     protected $fillable = [
         "user_id",
         "trade_type",

@@ -2,6 +2,7 @@
 
 namespace Modules\wallet\app\Repositories;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Expression;
 use Modules\trade\app\Enums\TradeTypes;
 use Modules\wallet\app\Interfaces\WalletRepositoryInterface;
@@ -9,6 +10,13 @@ use Modules\wallet\app\Models\Wallet;
 
 class WalletRepository implements WalletRepositoryInterface
 {
+    private Wallet $model;
+
+    public function __construct(Wallet $model)
+    {
+        $this->model = $model;
+    }
+
     public function forUser(int $userId): Wallet
     {
         return Wallet::query()
@@ -79,5 +87,12 @@ class WalletRepository implements WalletRepositoryInterface
                 ->where('id', $walletId)
                 ->decrement('reserved_gold', $remainingQty);
         }
+    }
+
+    public function addWallet(int $userId): Model
+    {
+        $data = ['user_id' => $userId];
+
+        return $this->model->saveModel($data);
     }
 }

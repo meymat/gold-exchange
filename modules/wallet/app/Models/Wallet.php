@@ -5,7 +5,6 @@ namespace Modules\wallet\app\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Modules\core\app\Http\Models\BaseModel;
-use Modules\core\app\Traits\ModelsTrait\GeneralCrudTrait;
 use Modules\user\app\Models\User;
 
 /**
@@ -18,8 +17,6 @@ use Modules\user\app\Models\User;
  */
 class Wallet extends BaseModel
 {
-    use GeneralCrudTrait;
-
     protected $fillable = [
         "user_id",
         "gold_balance",

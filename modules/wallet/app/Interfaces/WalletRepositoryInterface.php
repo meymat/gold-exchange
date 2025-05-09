@@ -2,6 +2,7 @@
 
 namespace Modules\wallet\app\Interfaces;
 
+use Illuminate\Database\Eloquent\Model;
 use Modules\wallet\app\Models\Wallet;
 
 interface WalletRepositoryInterface
@@ -19,4 +20,6 @@ interface WalletRepositoryInterface
     public function finalizeWallet(int $buyerWalletId, int $sellerWalletId, int $qty, float $price, float $feeBuyer, float $feeSeller): void;
 
     public function releaseReservation(int $walletId, string $orderType, float $remainingQty, float $price, float $estimatedFee = 0): void;
+
+    public function addWallet(int $userId): Model;
 }

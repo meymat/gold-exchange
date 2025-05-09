@@ -7,14 +7,24 @@ use Modules\auth\app\Http\Requests\LoginRequest;
 use Modules\auth\app\Http\Requests\RegisterRequest;
 use Modules\core\app\Http\Controllers\CoreController;
 use Modules\user\app\Services\AuthService;
+use Modules\wallet\app\Repositories\WalletRepository;
 
 class AuthController extends CoreController
 {
-    public function __construct(private readonly AuthService $auth) {}
+    private AuthService $auth;
+    private WalletRepository $walletRepository;
+
+    public function __construct(AuthService $authService,WalletRepository $walletRepository) {
+        $this->auth = $authService;
+        $this->walletRepository = $walletRepository;
+    }
 
     public function register(RegisterRequest $request): JsonResponse
     {
         $result = $this->auth->register($request->validated());
+        $user = $result['user'];
+        $this->walletRepository->addWallet($user->id);
+
         return response()->json($result, 201);
     }
 
@@ -24,12 +34,14 @@ class AuthController extends CoreController
             $request->input('email'),
             $request->input('password')
         );
+
         return response()->json($result);
     }
 
     public function logout(): JsonResponse
     {
         $this->auth->logout(auth()->user());
+
         return response()->json(['message' => __('auth.logged_out')]);
     }
 }
