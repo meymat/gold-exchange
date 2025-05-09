@@ -4,6 +4,7 @@ namespace Modules\order\app\Services;
 
 use Illuminate\Database\Eloquent\Collection;
 use Modules\commission\app\Services\CommissionService;
+use Modules\order\app\Enums\OrderStatuses;
 use Modules\order\app\Interfaces\OrderRepositoryInterface;
 use Modules\order\app\Jobs\MatchOrderJob;
 use Modules\order\app\Models\Order;
@@ -42,6 +43,7 @@ class OrderService
 
     public function createBuyOrder(array $data): Order
     {
+
         $quantity   = $data['quantity'];
         $price   = $data['price'];
         $userId = $data['user_id'];
@@ -53,12 +55,11 @@ class OrderService
 
         $order = $this->orderRepository->create([
             'user_id'           => $data['user_id'],
-            'type'              => TradeTypes::Sell->value,
+            'trade_type'              => TradeTypes::Buy->value,
             'price'             => $data['price'],
             'initial_quantity'  => $data['quantity'],
             'remaining_quantity'=> $data['quantity'],
-            'status_id'         => config('order.statuses.open'),
-            'expires_at'        => $data['expires_at'],
+            'order_status'         => OrderStatuses::Open->value,
         ]);
 
         MatchOrderJob::dispatch($order->id);
@@ -78,12 +79,11 @@ class OrderService
 
         $order = $this->orderRepository->create([
             'user_id'           => $data['user_id'],
-            'type'              => TradeTypes::Sell->value,
+            'trade_type'              => TradeTypes::Sell->value,
             'price'             => $data['price'],
             'initial_quantity'  => $data['quantity'],
             'remaining_quantity'=> $data['quantity'],
-            'status_id'         => config('order.statuses.open'),
-            'expires_at'        => $data['expires_at'],
+            'order_status'         => OrderStatuses::Open->value,
         ]);
 
         MatchOrderJob::dispatch($order->id);
