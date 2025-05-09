@@ -78,7 +78,6 @@ class OrderRepository implements OrderRepositoryInterface
 
         Order::query()->where('id', $orderId)
             ->update([
-                'remaining_quantity' => $remainingQty,
                 'status_id' => $status,
             ]);
     }

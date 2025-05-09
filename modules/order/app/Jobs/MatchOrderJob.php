@@ -12,6 +12,7 @@ use Modules\commission\app\Services\CommissionService;
 use Modules\order\app\Interfaces\OrderRepositoryInterface;
 use Modules\trade\app\Enums\TradeTypes;
 use Modules\trade\app\Interfaces\TradeRepositoryInterface;
+use Modules\wallet\app\Interfaces\WalletRepositoryInterface;
 
 class MatchOrderJob implements ShouldQueue
 {
@@ -29,7 +30,8 @@ class MatchOrderJob implements ShouldQueue
     public function handle(
         OrderRepositoryInterface $ordersRepository,
         TradeRepositoryInterface $tradesRepository,
-        CommissionService        $commissionService
+        CommissionService        $commissionService,
+        WalletRepositoryInterface  $walletRepository
     ): void
     {
         $incoming = $ordersRepository->find($this->orderId);
@@ -37,7 +39,7 @@ class MatchOrderJob implements ShouldQueue
             return;
         }
 
-        DB::transaction(function () use ($incoming, $ordersRepository, $tradesRepository, $commissionService) {
+        DB::transaction(function () use ($incoming, $ordersRepository, $tradesRepository, $commissionService, $walletRepository) {
             $book = $ordersRepository->findOpposingOrders($incoming->trade_type, $incoming->price);
 
             foreach ($book as $order) {
@@ -59,6 +61,9 @@ class MatchOrderJob implements ShouldQueue
                     'commission_seller' => $feeSeller,
                 ]);
 
+                $buyerWalletId = $incoming->trade_type === TradeTypes::Buy->value ? $incoming->user->wallet->id : $order->user->wallet->id;
+                $sellerWalletId = $incoming->trade_type === TradeTypes::Sell->value ? $incoming->user->wallet->id : $order->user->wallet->id;
+                $walletRepository->finalizeWallet($buyerWalletId, $sellerWalletId, $matchQty, $tradePrice, $feeBuyer, $feeSeller);
                 $ordersRepository->decrementQuantity($incoming->id,$matchQty);
                 $ordersRepository->decrementQuantity($order->id,$matchQty);
                 $ordersRepository->updateStatus($order->id, $order->remaining_quantity);
