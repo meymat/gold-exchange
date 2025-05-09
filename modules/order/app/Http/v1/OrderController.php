@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Modules\core\app\Http\Controllers\ModelController;
 use Modules\core\app\Http\Requests\StoreOrderRequest;
 use Modules\order\app\Models\Order;
+use Modules\order\app\Resources\OrderCollection;
 use Modules\order\app\Resources\OrderResource;
 use Modules\order\app\Services\OrderService;
 
@@ -37,6 +38,23 @@ class OrderController extends ModelController
             ['user_id' => auth()->id()]
         ));
         return response()->json(new OrderResource($order), 201);
+    }
+
+    public function history(): JsonResponse
+    {
+        $orders = $this->orderService->history(auth()->id());
+
+        return (new OrderCollection($orders))
+            ->response()
+            ->setStatusCode(200);
+    }
+
+    public function cancel(Request $request): JsonResponse
+    {
+        $request->validate(['order_id'=>'required|integer']);
+        $this->orderService->cancel($request->order_id, auth()->id());
+
+        return response()->json(['message'=>'Order cancelled']);
     }
 
 }

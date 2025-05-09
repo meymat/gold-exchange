@@ -18,4 +18,8 @@ interface OrderRepositoryInterface
     public function findOpposingOrders(string $type, float $price): Collection;
 
     public function updateStatus(int $orderId, float $remainingQty): void;
+
+    public function history(int $userId): Collection;
+
+    public function cancel(int $orderId, int $userId): void;
 }

@@ -2,6 +2,7 @@
 
 namespace Modules\order\app\Services;
 
+use Illuminate\Database\Eloquent\Collection;
 use Modules\commission\app\Services\CommissionService;
 use Modules\order\app\Interfaces\OrderRepositoryInterface;
 use Modules\order\app\Jobs\MatchOrderJob;
@@ -88,5 +89,15 @@ class OrderService
         MatchOrderJob::dispatch($order->id);
 
         return $order;
+    }
+
+    public function history(int $userId):Collection
+    {
+        return $this->orderRepository->history($userId);
+    }
+
+    public function cancel(int $orderId, int $userId): void
+    {
+        $this->orderRepository->cancel($orderId, $userId);
     }
 }

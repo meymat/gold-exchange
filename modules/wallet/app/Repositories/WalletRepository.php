@@ -3,6 +3,7 @@
 namespace Modules\wallet\app\Repositories;
 
 use Illuminate\Database\Query\Expression;
+use Modules\trade\app\Enums\TradeTypes;
 use Modules\wallet\app\Interfaces\WalletRepositoryInterface;
 use Modules\wallet\app\Models\Wallet;
 
@@ -61,5 +62,22 @@ class WalletRepository implements WalletRepositoryInterface
                 'gold_balance'    => new Expression("gold_balance - {$qty}"),
                 'amount_balance'  => new Expression("amount_balance + {$totalCost} - {$feeSeller}"),
             ]);
+    }
+
+    public function releaseReservation(int $walletId, string $orderType, float $remainingQty, float $price, float $estimatedFee = 0): void
+    {
+        if ($orderType === TradeTypes::Buy->value) {
+            $totalReserved = ($price * $remainingQty) + $estimatedFee;
+
+            Wallet::query()
+                ->where('id', $walletId)
+                ->decrement('reserved_amount', $totalReserved);
+        }
+
+        if ($orderType === TradeTypes::Sell->value) {
+            Wallet::query()
+                ->where('id', $walletId)
+                ->decrement('reserved_gold', $remainingQty);
+        }
     }
 }

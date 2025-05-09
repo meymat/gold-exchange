@@ -7,9 +7,19 @@ use Modules\order\app\Enums\OrderStatuses;
 use Modules\order\app\Interfaces\OrderRepositoryInterface;
 use Modules\order\app\Models\Order;
 use Modules\trade\app\Enums\TradeTypes;
+use Modules\wallet\app\Interfaces\WalletRepositoryInterface;
+use Modules\wallet\app\Repositories\WalletRepository;
 
 class OrderRepository implements OrderRepositoryInterface
 {
+    private WalletRepository $walletRepository;
+
+    public function __construct
+    (
+        WalletRepositoryInterface $walletRepository
+    ){
+        $this->walletRepository = $walletRepository;
+    }
 
     public function find(int $id): ?Order
     {
@@ -80,5 +90,40 @@ class OrderRepository implements OrderRepositoryInterface
             ->update([
                 'status_id' => $status,
             ]);
+    }
+
+    public function history(int $userId): Collection
+    {
+        return Order::query()
+            ->where('user_id', $userId)
+            ->whereIn('status_id', [
+                OrderStatuses::Filled->value,
+                OrderStatuses::Cancelled->value,
+            ])
+            ->orderBy('created_at', 'desc')
+            ->get();
+    }
+
+    public function cancel(int $orderId, int $userId): void
+    {
+        $order = Order::query()
+            ->where('id', $orderId)
+            ->where('user_id', $userId)
+            ->whereIn('status_id', [
+                OrderStatuses::Open->value,
+                OrderStatuses::PartiallyFilled->value,
+            ])
+            ->firstOrFail();
+
+        $remainingQty   = $order->remaining_quantity;
+        $price          = $order->price;
+        $estimatedFee   = 0;
+
+        $order->update([
+            'status_id'         => OrderStatuses::Cancelled->value,
+            'remaining_quantity'=> 0,
+        ]);
+
+        $this->walletRepository->releaseReservation($order->user->wallet->id, $order->trade_type, $remainingQty, $price, $estimatedFee);
     }
 }

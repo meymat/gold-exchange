@@ -17,4 +17,6 @@ interface WalletRepositoryInterface
     public function reserveGold(int $walletId, float $quantity): void;
 
     public function finalizeWallet(int $buyerWalletId, int $sellerWalletId, int $qty, float $price, float $feeBuyer, float $feeSeller): void;
+
+    public function releaseReservation(int $walletId, string $orderType, float $remainingQty, float $price, float $estimatedFee = 0): void;
 }
