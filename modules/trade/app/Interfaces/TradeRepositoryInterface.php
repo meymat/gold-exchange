@@ -2,9 +2,9 @@
 
 namespace Modules\trade\app\Interfaces;
 
-use Modules\order\app\Models\Order;
+use Modules\trade\app\Models\Trade;
 
 interface TradeRepositoryInterface
 {
-    public function create(array $data): Order;
+    public function create(array $data): Trade;
 }

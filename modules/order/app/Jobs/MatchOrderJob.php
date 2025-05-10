@@ -41,13 +41,14 @@ class MatchOrderJob implements ShouldQueue
 
         DB::transaction(function () use ($incoming, $ordersRepository, $tradesRepository, $commissionService, $walletRepository) {
             $book = $ordersRepository->findOpposingOrders($incoming->trade_type, $incoming->price);
-
+            $totalMatchQty = 0;
             foreach ($book as $order) {
                 if ($incoming->remaining_quantity <= 0) {
                     break;
                 }
 
                 $matchQty = min($incoming->remaining_quantity, $order->remaining_quantity);
+                $totalMatchQty =  $totalMatchQty + $matchQty;
                 $tradePrice = $order->price;
                 $feeBuyer = $commissionService->calculate(TradeTypes::Buy->value, $matchQty, $tradePrice);
                 $feeSeller = $commissionService->calculate(TradeTypes::Sell->value, $matchQty, $tradePrice);
@@ -66,10 +67,10 @@ class MatchOrderJob implements ShouldQueue
                 $walletRepository->finalizeWallet($buyerWalletId, $sellerWalletId, $matchQty, $tradePrice, $feeBuyer, $feeSeller);
                 $ordersRepository->decrementQuantity($incoming->id,$matchQty);
                 $ordersRepository->decrementQuantity($order->id,$matchQty);
-                $ordersRepository->updateStatus($order->id, $order->remaining_quantity);
+                $ordersRepository->updateStatus($order->id, $order->remaining_quantity - $matchQty);
             }
 
-            $ordersRepository->updateStatus($incoming->id, $incoming->remaining_quantity);
+            $ordersRepository->updateStatus($incoming->id, $incoming->remaining_quantity-$totalMatchQty);
         });
     }
 }

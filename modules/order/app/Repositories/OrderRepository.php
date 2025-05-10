@@ -85,7 +85,6 @@ class OrderRepository implements OrderRepositoryInterface
         $status = $remainingQty <= 0
             ? OrderStatuses::Filled->value
             : OrderStatuses::PartiallyFilled->value;
-
         Order::query()->where('id', $orderId)
             ->update([
                 'order_status' => $status,

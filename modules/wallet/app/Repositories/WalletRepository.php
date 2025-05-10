@@ -58,7 +58,7 @@ class WalletRepository implements WalletRepositoryInterface
         Wallet::query()
             ->where('id', $buyerWalletId)
             ->update([
-                'reserved_amount' => new Expression("reserved_amount - {$totalCost}"),
+                'reserved_amount' => new Expression("reserved_amount - {$totalCost}- {$feeBuyer}"),
                 'amount_balance'  => new Expression("amount_balance - {$totalCost} - {$feeBuyer}"),
                 'gold_balance'    => new Expression("gold_balance + {$qty}"),
             ]);
