@@ -63,7 +63,11 @@ services:
             retries: 5
         networks:
             - laravel
-
+    composer:
+        image: composer:2
+        working_dir: /var/www
+        volumes:
+            - ./:/var/www
 volumes:
     dbdata:
 

@@ -43,7 +43,7 @@ Copy example env:
    ```
 1. install composer.json:
    ```bash
-   composer install
+   docker-compose exec -u root app composer install
    ```   
 
 
