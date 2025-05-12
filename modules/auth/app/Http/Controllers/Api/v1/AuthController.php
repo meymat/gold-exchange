@@ -3,6 +3,7 @@
 namespace Modules\auth\app\Http\Controllers\Api\v1;
 
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 use Modules\auth\app\Http\Requests\LoginRequest;
 use Modules\auth\app\Http\Requests\RegisterRequest;
 use Modules\auth\app\Resources\AuthResource;
@@ -22,10 +23,14 @@ class AuthController extends CoreController
 
     public function register(RegisterRequest $request): JsonResponse
     {
+        DB::beginTransaction();
         $result = $this->auth->register($request->validated());
         $user = $result['user'];
-        $this->walletRepository->addWallet($user->id);
-
+        $wallet = $this->walletRepository->addWallet($user->id);
+        $walletId = $wallet->id;
+        $this->walletRepository->increaseAmount( $walletId,  100000000);
+        $this->walletRepository->increaseGold( $walletId,  50);
+        DB::commit();
         return (new AuthResource($result))
             ->response()
             ->setStatusCode(201);

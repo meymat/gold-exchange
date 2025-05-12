@@ -22,4 +22,8 @@ interface WalletRepositoryInterface
     public function releaseReservation(int $walletId, string $orderType, float $remainingQty, float $price, float $estimatedFee = 0): void;
 
     public function addWallet(int $userId): Model;
+
+    public function increaseAmount(int $walletId, int $price): Model;
+
+    public function increaseGold(int $walletId, int $gold): Model;
 }

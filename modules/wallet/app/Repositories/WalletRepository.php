@@ -95,4 +95,22 @@ class WalletRepository implements WalletRepositoryInterface
 
         return $this->model->saveModel($data);
     }
+
+    public function increaseAmount(int $walletId, int $price): Model
+    {
+        $data = [
+            'amount_balance' => $price,
+        ];
+
+        return $this->model->editModel($walletId, $data);
+    }
+
+    public function increaseGold(int $walletId, int $gold): Model
+    {
+        $data = [
+            'gold_balance' => $gold,
+        ];
+
+        return $this->model->editModel($walletId, $data);
+    }
 }
