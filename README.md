@@ -16,9 +16,10 @@ A modular **Laravel 12** application implementing a simple gold trading exchange
 1. [Prerequisites](#prerequisites)
 2. [Environment Setup](#environment-setup)
 3. [Docker Setup](#docker-setup)
-4. [API Documentation (Scramble)](#api-documentation-scramble)
-5. [Running the Application](#running-the-application)
-6. [API Endpoints Summary](#api-endpoints-summary)
+4. [Running the Application](#running-the-application)
+5. [Match buy sell orders](#match-buy-sell-orders)
+6. [API Documentation (Scramble)](#api-documentation-scramble)
+7. [API Endpoints Summary](#api-endpoints-summary)
 
 ---
 
@@ -41,7 +42,7 @@ Copy example env:
    ```bash
    docker-compose up --build -d
    ```
-1. install composer.json:
+2. install composer.json:
    ```bash
    docker-compose exec -u root app composer install
    ```   
@@ -55,13 +56,6 @@ Copy example env:
 
 ---
 
-## API Documentation (Scramble)
-View:
-- Swagger UI:  `http://localhost:8000/docs/api`
-- OpenAPI JSON: `http://localhost:8000/docs/api.json`
-
----
-
 ## Running the Application
 1. Generate application key:
    ```bash
@@ -71,14 +65,23 @@ View:
    ```bash
    docker-compose exec app php artisan migrate --seed
    ```
-3. (Optional) Cache config/routes/views:
-   ```bash
-   docker-compose exec app php artisan config:cache
-   docker-compose exec app php artisan route:cache
-   docker-compose exec app php artisan view:cache
-   ```
-4. Access the app in your browser at **http://localhost:8000**.
 
+3. Access the app in your browser at **http://localhost:8000**.
+
+---
+## Match buy sell orders
+for running the MatchOrderJob that match sell and buy orders, run bellow command
+
+   ```bash
+   
+   docker-compose exec app php artisan queue:work
+   
+   ```
+---
+## API Documentation (Scramble)
+View:
+- Swagger UI:  `http://localhost:8000/docs/api`
+- OpenAPI JSON: `http://localhost:8000/docs/api.json`
 ---
 
 ## API Endpoints Summary
