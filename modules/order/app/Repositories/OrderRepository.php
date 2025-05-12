@@ -97,6 +97,7 @@ class OrderRepository implements OrderRepositoryInterface
             ->where('user_id', $userId)
             ->whereIn('order_status', [
                 OrderStatuses::Filled->value,
+                OrderStatuses::PartiallyFilled->value,
                 OrderStatuses::Cancelled->value,
             ])
             ->orderBy('created_at', 'desc')
